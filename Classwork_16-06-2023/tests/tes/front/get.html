@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Список постов</title>
+</head>
+
+<body>
+    <nav class="menu">
+        <h3>My_Blog</h3>
+        <ul class="nav">
+            <li><a href="/get.html">Get</a></li>
+            <li><a href="/getpost.html">GetPost</a></li>
+            <li><a href=" ">О нас</a></li>
+            <li><a href=" ">Добавить пост</a></li>
+        </ul>
+        <ul class="reg">
+            <li>Регистрация</li>
+            <li><a href="/admin/">Вход</a></li>
+        </ul>
+    </nav> 
+    <main>
+        <h1>Список постов</h1>
+        <div id="post-list"></div>
+    </main>
+
+    <footer>
+        <h3>My_Blog</h3>
+        <div>
+            <p>Product by</p><br>
+            <p> @Xiver</p>
+        </div>
+        <p>This.footer</p>
+    </footer>
+    <script>
+        // Функция для создания HTML элементов
+        function createElement(tag, attributes, text) {
+            const element = document.createElement(tag);
+            if (attributes) {
+                for (let attr in attributes) {
+                    element.setAttribute(attr, attributes[attr]);
+                }
+            }
+            if (text) {
+                element.textContent = text;
+            }
+            return element;
+        }
+
+        // Получение постов с сервера и вывод на страницу
+        fetch('http://127.0.0.1:8000/api/people/')
+            .then(response => response.json()) // Преобразование ответа в формат JSON
+            .then(posts => {
+                const postList = document.getElementById('post-list');
+                posts.forEach(post => {
+                    const title = createElement('h2', null, post.title);
+                    const anons = createElement('p', null, post.anons);
+                    const date = createElement('p', null, post.date);
+
+                    const postContainer = createElement('div', { class: 'card' });
+                    postContainer.appendChild(title);
+                    postContainer.appendChild(anons);
+                    postContainer.appendChild(date);
+
+                    postList.appendChild(postContainer);
+                });
+            })
+            .catch(error => {
+                console.error('Ошибка при получении постов:', error);
+            });
+    </script>
+</body>
+
+</html>
